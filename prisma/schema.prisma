@@ -1,0 +1,105 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// criar migrate yarn prisma migrate dev
+
+model User {
+  id         String    @id @default(uuid())
+  email      String
+  password   String  
+
+  @@map("users")
+}
+
+model Campaign {
+  id                String    @id
+  name              String  
+  published         Boolean   @default(false)
+  active            Boolean   @default(true)
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @default(now())
+
+  questions         Question[]
+  clients           Client[]
+  answers_question  AnswersQuestion[]
+
+  @@map("campaigns")
+}
+
+model Client {
+  id                String    @id @default(uuid())
+  name              String
+  email             String
+  type              String    
+  created_at        DateTime? @default(now())
+  updated_at        DateTime? @default(now())
+  
+  campaign          Campaign @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+  campaign_id       String    
+
+  answers_question  AnswersQuestion[]
+
+  @@map("clients")
+}
+
+model Question {
+  id              String    @id @default(uuid())
+  order           Int      
+  name            String 
+  code            String
+  photos          String 
+  suggested_value String
+
+  campaign        Campaign? @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+  campaign_id     String?
+
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @default(now())
+
+  @@map("questions")
+}
+
+model AnswersQuestion {
+  id              String    @id @default(uuid())
+  question_id     String
+  suggested_value String
+  name            String    @default("")
+  code            String    @default("")
+  other_colours   Boolean
+  liked           String
+  amarelo         Boolean   @default(false)
+  azul            Boolean   @default(false)
+  bege            Boolean   @default(false)
+  branco          Boolean   @default(false)
+  cinza           Boolean   @default(false)
+  dourado         Boolean   @default(false)
+  estampado       Boolean   @default(false)
+  laranja         Boolean   @default(false)
+  marinho         Boolean   @default(false)
+  marrom          Boolean   @default(false)
+  preto           Boolean   @default(false)
+  rosa            Boolean   @default(false)
+  roxo            Boolean   @default(false)
+  verde           Boolean   @default(false)
+  vermelho        Boolean   @default(false)
+
+  client          Client @relation(fields: [client_id], references: [id], onDelete: Cascade)
+  client_id       String
+
+  campaign        Campaign @relation(fields: [campaign_id], references: [id], onDelete: Cascade)
+  campaign_id     String
+
+  created_at      DateTime? @default(now())
+  updated_at      DateTime? @default(now())
+
+  @@map("answers_questions")
+}
