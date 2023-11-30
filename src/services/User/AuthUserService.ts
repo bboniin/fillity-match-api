@@ -1,5 +1,4 @@
 import prismaClient from '../../prisma'
-import { compare, hash } from "bcryptjs"
 import { sign } from 'jsonwebtoken'
 import authConfig from "./../../utils/auth"
 
@@ -17,11 +16,9 @@ class AuthUserService {
             }
         })
 
-        if (!user) {
+        if (!user || password != user.password) {
             throw new Error("Email e Senha não correspondem ou não existe.")
         }
-
-        const passwordMatch = await compare(password, user.password)
 
         const token = sign({
             email: user.email
@@ -29,10 +26,6 @@ class AuthUserService {
             subject: user.id,
             expiresIn: '365d'
         })
-
-        if (!passwordMatch) {
-            throw new Error("Email e Senha não correspondem ou não existe.")
-        }
 
         return ({
             user: {

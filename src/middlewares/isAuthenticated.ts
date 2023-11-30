@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { verify } from 'jsonwebtoken'
 import authConfig from "./../utils/auth"
+import prismaClient from '../prisma';
 
 interface Payload {
   sub: string;
 }
 
-export function isAuthenticated(req: Request, res: Response, next: NextFunction) {
+export async function isAuthenticated(req: Request, res: Response, next: NextFunction) {
 
   const authToken = req.headers.authorization;
 
@@ -24,6 +25,16 @@ export function isAuthenticated(req: Request, res: Response, next: NextFunction)
     ) as Payload
 
     req.userId = sub;
+
+    const user = await prismaClient.user.findFirst({
+      where: {
+          id: req.userId
+      }
+    })
+    
+    if (!user) {
+      throw new Error("Usuário não existe.")
+    }
 
     return next();
   } catch (error) {

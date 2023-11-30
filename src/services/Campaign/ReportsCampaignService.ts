@@ -62,6 +62,19 @@ class ReportsCampaignService {
             if (!clients[item.client_id]) {
                 clients[item.client_id] = true
             }
+            if (item.liked == "amei") {
+                questions[item.question_id].liked_amei += 1
+                campaign["liked_amei"] += 1
+            } else {
+                if (item.liked == "nao") {
+                    questions[item.question_id].liked_nao += 1
+                    campaign["liked_nao"] += 1
+                    return;
+                } else {
+                    questions[item.question_id].liked_talvez += 1
+                    campaign["liked_talvez"] += 1
+                }
+            }
             if (item.other_colours) {
                 questions[item.question_id].other_colours_sim += 1
                 campaign["other_colours_sim"] += 1
@@ -79,18 +92,6 @@ class ReportsCampaignService {
                 } else {
                     questions[item.question_id].suggested_value_bom += 1
                     campaign["suggested_value_bom"] += 1
-                }
-            }
-            if (item.liked == "amei") {
-                questions[item.question_id].liked_amei += 1
-                campaign["liked_amei"] += 1
-            } else {
-                if (item.liked == "nao") {
-                    questions[item.question_id].liked_nao += 1
-                    campaign["liked_nao"] += 1
-                } else {
-                    questions[item.question_id].liked_talvez += 1
-                    campaign["liked_talvez"] += 1
                 }
             }
         })

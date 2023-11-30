@@ -13,8 +13,8 @@ interface CampaignRequest {
 class CreateAnswerQuestionService {
     async execute({ campaign_id, client_id, question_id, colors, other_colours , suggested_value, liked}: CampaignRequest) {
 
-        if (!campaign_id || !client_id || !suggested_value || !liked ) {
-            throw new Error("Todos os campos são obrigatórios")
+        if (!campaign_id || !client_id || !liked ) {
+            throw new Error("Id da campanha, do cliente e pelo menos o primeiro voto são obrigatórios")
         }
         
         const answerGet = await prismaClient.answersQuestion.findFirst({

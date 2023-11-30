@@ -17,7 +17,7 @@ class ListCampaignsService {
                 published: true
             },
             orderBy: {
-                created_at: "asc"
+                created_at: "desc"
             },
             include: {
                 questions: {
@@ -27,7 +27,7 @@ class ListCampaignsService {
                 },
                 answers_question: {
                     orderBy: {
-                        created_at: "asc"
+                        created_at: "desc"
                     }
                 },
             },
