@@ -33,7 +33,7 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
     })
     
     if (!user) {
-      throw new Error("Usuário não existe.")
+      return res.status(401).json({ message: 'Usuário não existe' });
     }
 
     return next();
@@ -41,5 +41,4 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
     return res.status(401).json({ message: 'Internal server Error' });
   }
 
-  return next();
 }
